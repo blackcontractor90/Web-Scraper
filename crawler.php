@@ -6,7 +6,7 @@ Class Crawler
 	{		
 		$this->curl= curl_init();
 	}
-	//This is used for login.
+	//used for login.
 	function logIn($loginActionUrl,$parameters)
 	{
 			curl_setopt ($this->curl, CURLOPT_URL,$loginActionUrl);	
@@ -33,7 +33,7 @@ Class Crawler
 	{
 		return substr($url,0,strrpos($url,"/"));
 	}
-	//Convert the link as It should be
+	//convert the link as it should be
 	function convertLink($domain,$url,$link)
 	{
 		
@@ -59,15 +59,15 @@ Class Crawler
 	}
 	function crawlLinks($url)
 	{
-		$content=$this->getContent($url);//get the whole page
+		$content=$this->getContent($url);//retrieve the entire page
 		$domain=$this->getDomain($url);
 		$dom = new DOMDocument();
 		@$dom->loadHTML($content);		
 		$xpath = new DOMXPath($dom);
-		$hrefs = $xpath->evaluate("//a");//get all a tags		
+		$hrefs = $xpath->evaluate("//a");//retrieve all <a> tags		
 		for ($i = 0; $i < $hrefs->length; $i++) 
 		{
-			$href = $hrefs->item($i);//select an a tag									
+			$href = $hrefs->item($i);//select an <a> tag									
 			$links['link'][$i]=$this->convertLink($domain,$url,$href->getAttribute('href'));
 			$links['text'][$i]=$href->nodeValue;		
 		}
@@ -84,24 +84,24 @@ Class Crawler
 		$dom = new DOMDocument();
 		@$dom->loadHTML($content);		
 		$xdoc = new DOMXPath($dom);	
-		//Read the images that is between <a> tag
-		$atags = $xdoc ->evaluate("//a");		//Read all a tags	
+		//read the images that is between <a> tag
+		$atags = $xdoc ->evaluate("//a");		//read all <a> tags	
 		$index=0;
 		for ($i = 0; $i < $atags->length; $i++) 
 		{
-			$atag = $atags->item($i);			//select an a tag
-			$imagetags=$atag->getElementsByTagName("img");//get img tag
+			$atag = $atags->item($i);			//select an <a> tag
+			$imagetags=$atag->getElementsByTagName("img");//get <img> tag
 			$imagetag=$imagetags->item(0);
-			if(sizeof($imagetag)>0)//if img tag exists
+			if(sizeof($imagetag)>0)//if <img> tag exists
 			{
 				$imagelinked['src'][$index]=$imagetag->getAttribute('src');//save image src
 				$imagelinked['link'][$index]=$atag->getAttribute('href');//save image link		
 				$index=$index+1;
 			}
 		}			
-		//Read all image
-		//Betweem <img> tag 
-		$imagetags = $xdoc ->evaluate("//img");	//Read all img tags	
+		//read all image
+		//between <img> tag 
+		$imagetags = $xdoc ->evaluate("//img");	//read all <img> tags	
 		$index=0;
 		$indexlinked=0;
 		for ($i = 0; $i < $imagetags->length; $i++) 
